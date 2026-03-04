@@ -1,0 +1,30 @@
+{
+  "xlm_roberta": {
+    "model_name": "xlm-roberta-base",
+    "max_length": 512,
+    "learning_rate": 5e-05,
+    "per_device_train_batch_size": 32,
+    "num_train_epochs": 10,
+    "weight_decay": 0.01,
+    "eval_strategy": "yes",
+    "save_strategy": "yes",
+    "load_best_model_at_end": false,
+    "bf16": true,
+    "logging_steps": 50,
+    "report_to": "none"
+  },
+  "bert_base": {
+    "model_name": "neuralmind/bert-base-portuguese-cased",
+    "max_length": 512,
+    "learning_rate": 5e-05,
+    "per_device_train_batch_size": 32,
+    "num_train_epochs": 10,
+    "weight_decay": 0.01,
+    "eval_strategy": "yes",
+    "save_strategy": "yes",
+    "load_best_model_at_end": false,
+    "bf16": true,
+    "logging_steps": 50,
+    "report_to": "none"
+  }
+}

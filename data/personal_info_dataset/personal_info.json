@@ -1,0 +1,110 @@
+{
+  "minute_id": "EXEMPLO_TAGS_2024_01",
+  "full_text": "No dia 20/05/2023, às 14:30h, o Diretor do Departamento dos Recursos Humanos, Sr. João Silva, Licenciado em Licenciatura de Psicologia pela Faculdade de Economia da Universidade do Porto, residente na Rua das Flores n.º 10, Avenida Central, em Freguesia do Porto, acompanhado pelo seu Marido, que trabalha como Carpinteiro, chegou na sua Mercedes-Benz Classe S de matrícula 48-RF-99. O processo 5597/2023 da empresa Construções & Filho, Lda, associado ao NIF 11490753, trata de Pintura e referências de contacto.",
+  "tokens": ["No", "dia", "09", "de", "Agosto", "de", "2015", ",", "às", "20", ":", "01", "m", ",", "o", "Chefe", "da", "Divisão", "de", "Higiene", "Urbana", ",", "Sr", ".", "Ana", "-", "Laura", "Torres", ",", "Licenciado", "em", "Gestão", "pela", "Universidade", "Aberta", ",", "residente", "na", "Av", "Eva", "Jesus", ",", "Alverca", "do", "Ribatejo", ",", "em", "Turquemenistão", ",", "acompanhado", "pelo", "seu", "esposo", ",", "que", "trabalha", "como", "Técnico", "de", "controlo", "de", "instalações", "da", "indústria", "química", ",", "chegou", "na", "sua", "Mercedes", "-", "Benz", "EQC", "de", "matrícula", "76", "-", "41", "-", "46", ".", "O", "processo", "4800", "da", "empresa", "Anita", "Amorim", "-", "Serviços", ",", "associado", "ao", "NIF", "3721", "/", "217", ",", "trata", "de", "painel", "de", "azulejos", "e", "2", ".", "º", "andar", "."],
+  "tags": ["O", "O", "B-PERSONAL-DATE", "I-PERSONAL-DATE", "I-PERSONAL-DATE", "I-PERSONAL-DATE", "I-PERSONAL-DATE", "O", "O", "B-PERSONAL-TIME", "I-PERSONAL-TIME", "I-PERSONAL-TIME", "I-PERSONAL-TIME", "O", "O", "B-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "O", "O", "O", "B-PERSONAL-NAME", "I-PERSONAL-NAME", "I-PERSONAL-NAME", "I-PERSONAL-NAME", "O", "O", "O", "B-PERSONAL-DEGREE", "O", "B-PERSONAL-FACULTY", "I-PERSONAL-FACULTY", "O", "O", "O", "B-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "O", "O", "B-PERSONAL-LOCATION", "O", "O", "O", "O", "B-PERSONAL-FAMILY", "O", "O", "O", "O", "B-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "O", "O", "O", "O", "B-PERSONAL-VEHICLE", "I-PERSONAL-VEHICLE", "I-PERSONAL-VEHICLE", "I-PERSONAL-VEHICLE", "O", "O", "B-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "O", "O", "O", "B-PERSONAL-ADMIN", "O", "O", "B-PERSONAL-COMPANY", "I-PERSONAL-COMPANY", "I-PERSONAL-COMPANY", "I-PERSONAL-COMPANY", "O", "O", "O", "O", "B-PERSONAL-INFO", "I-PERSONAL-INFO", "I-PERSONAL-INFO", "O", "O", "O", "B-PERSONAL-ARTISTIC", "I-PERSONAL-ARTISTIC", "I-PERSONAL-ARTISTIC", "O", "B-PERSONAL-OTHER", "I-PERSONAL-OTHER", "I-PERSONAL-OTHER", "I-PERSONAL-OTHER", "O"],
+  "personal_info": [
+    {
+      "type": "PERSONAL-DATE",
+      "text": "20/05/2023",
+      "start": 7,
+      "end": 17
+    },
+    {
+      "type": "PERSONAL-TIME",
+      "text": "14:30h",
+      "start": 22,
+      "end": 28
+    },
+    {
+      "type": "PERSONAL-POSITION",
+      "text": "Diretor do Departamento dos Recursos Humanos",
+      "start": 32,
+      "end": 76
+    },
+    {
+      "type": "PERSONAL-NAME",
+      "text": "João Silva",
+      "start": 82,
+      "end": 92
+    },
+    {
+      "type": "PERSONAL-DEGREE",
+      "text": "Licenciatura de Psicologia",
+      "start": 108,
+      "end": 127
+    },
+    {
+      "type": "PERSONAL-FACULTY",
+      "text": "Faculdade de Economia da Universidade do Porto",
+      "start": 140,
+      "end": 186
+    },
+    {
+      "type": "PERSONAL-ADDRESS",
+      "text": "Rua das Flores n.º 10, Avenida Central",
+      "start": 201,
+      "end": 239
+    },
+    {
+      "type": "PERSONAL-LOCATION",
+      "text": "Freguesia do Porto",
+      "start": 244,
+      "end": 262
+    },
+    {
+      "type": "PERSONAL-FAMILY",
+      "text": "Marido",
+      "start": 285,
+      "end": 291
+    },
+    {
+      "type": "PERSONAL-JOB",
+      "text": "Carpinteiro",
+      "start": 311,
+      "end": 322
+    },
+    {
+      "type": "PERSONAL-VEHICLE",
+      "text": "Mercedes-Benz Classe S",
+      "start": 338,
+      "end": 360
+    },
+    {
+      "type": "PERSONAL-LICENSE",
+      "text": "48-RF-99",
+      "start": 374,
+      "end": 382
+    },
+    {
+      "type": "PERSONAL-ADMIN",
+      "text": "5597/2023",
+      "start": 395,
+      "end": 404
+    },
+    {
+      "type": "PERSONAL-COMPANY",
+      "text": "Construções & Filho, Lda",
+      "start": 416,
+      "end": 440
+    },
+    {
+      "type": "PERSONAL-INFO",
+      "text": "11490753",
+      "start": 459,
+      "end": 467
+    },
+    {
+      "type": "PERSONAL-ARTISTIC",
+      "text": "Pintura",
+      "start": 478,
+      "end": 485
+    },
+    {
+      "type": "PERSONAL-OTHER",
+      "text": "referências de contacto",
+      "start": 488,
+      "end": 511
+    }
+  ]
+}
