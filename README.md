@@ -261,8 +261,8 @@ Run the trained model on a new, raw municipal document to extract and mask PII (
 ```bash
 python anonymize.py \
     --model_path "src/models/xlm_roberta/model_anonymization" \
-    --input_file "data/municipal_minutes/minutes_01.txt" \
-    --output_file "data/minutes_anonymized/minutes_01_anon.txt"
+    --input_file "sample_data/municipal_minutes/minutes_01.txt" \
+    --output_file "sample_data/minutes_anonymized/minutes_01_anon.txt"
 ```
 
 **Parameters**:
@@ -471,10 +471,10 @@ The dataset is stored in JSON format with the following structure:
 
 ### Data Files
 
-The data files for the CitiLink-Minutes subset are stored in the repository at `data/personal_info/` and can be referenced directly:
+The data files for the CitiLink-Minutes subset are stored in the repository at `sample_data/personal_info/` and can be referenced directly:
 
-- [personal_info.json](data/personal_info_dataset/personal_info.json) — Portuguese version (120 documents)
-- [split_info.json](data/personal_info_dataset/personal_info.json) — Train/val/test split information
+- [personal_info.json](sample_data/personal_info_dataset/personal_info.json) — Portuguese version (120 documents)
+- [split_info.json](sample_data/personal_info_dataset/personal_info.json) — Train/val/test split information
 
 ### Annotation Process
 
