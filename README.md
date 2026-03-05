@@ -9,7 +9,7 @@
 
 
 This repository presents an anonymization task and a corresponding evaluation framework for de-identification and Information Extraction (IE) algorithms, specifically tailored for Portuguese Municipal Meeting Minutes. It details the anonymization dataset and provides a benchmark of state-of-the-art models used for the protection of Personally Identifiable Information (PII).
-> The trained models are made publicly available on [HuggingFace](https://huggingface.co/collections/liaad/citilink) and we also developed a [Demo](https://huggingface.co/spaces/liaad/Citilink-Text-Anonymization-Demo).
+> The demo version is currently available at [Demo](https://huggingface.co/spaces/liaad/Citilink-Text-Anonymization-Demo).
 
 <!-- Include a diagram if available -->
 <div align="center">
