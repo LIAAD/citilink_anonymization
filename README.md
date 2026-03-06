@@ -556,6 +556,7 @@ The system is designed around the Hugging Face `transformers` ecosystem, tailore
 - **Seqeval Integration:** Converts token-level predictions back into word-level BIO tags to compute strict, entity-level Precision, Recall, and F1-Scores.
 - **Confusion Matrix Generator:** Uses `seaborn` and `matplotlib` to visually map the model's classification overlaps.
 - **Purpose:** Provides rigorous, human-readable insights into the model's performance, ensuring no PII category is left vulnerable to data leaks.
+
 ### Data Flow Diagram
 
 Data flows from raw document chunks through subword tokenization, into the transformer model for BIO tagging, and finally to the evaluation and de-identification outputs.
@@ -706,7 +707,9 @@ The pre-trained models are available for download:
 - INCEpTION project for the annotation tool
 - Hugging Face for model hosting and transformers library
 
+## 14. Citation
 
+Coming Soon...
 
 
 ---
