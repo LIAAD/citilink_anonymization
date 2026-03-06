@@ -405,16 +405,16 @@ src/
 
 ### Dataset Statistics
 
-| Attribute | Value                                               |
-|-----------|-----------------------------------------------------|
-| **Total Documents** | 120                                                 |
-| **Municipalities** | 6 (M1, M2, M3, M4, M5, M6)                          |
+| Attribute                      | Value                                               |
+|--------------------------------|-----------------------------------------------------|
+| **Total Documents**            | 120                                                 |
+| **Municipalities**             | 6 (M1, M2, M3, M4, M5, M6)                          |
 | **Documents per Municipality** | 20                                                  |
-| **Average Segments per Document** | 45 entities                                         |
-| **Language** | Portuguese (PT)                                     |
-| **Annotation Type** | Privacy-sensitive entities and personal information |
-| **Domain** | Municipal government meetings                       |
-| **Time Period** | 2021-2024                                           |
+| **Average Entities per Document**     | 45 entities                                         |
+| **Language**                   | Portuguese (PT)                                     |
+| **Annotation Type**            | Privacy-sensitive entities and personal information |
+| **Domain**                     | Municipal government meetings                       |
+| **Time Period**                | 2021-2024                                           |
 
 ### Dataset Structure
 
@@ -460,7 +460,7 @@ The dataset is stored in JSON format with the following structure:
               "text": "Gestão",
               "start": 115,
               "end": 121
-            { ... },
+            { ... },  
             { ... }
         ]
       }
@@ -480,7 +480,7 @@ The data files for the CitiLink-Minutes subset are stored in the repository at `
 
 - **Source**: Official municipal meeting minutes provided by municipalities
 - **Annotation Tool**: INCEpTION (https://inception-project.github.io/)
-- **Annotation Guidelines**: Topic boundaries marked at natural transition points between agenda items
+- **Annotation Guidelines**: Identifiable personal information is anonymized, except for official roles (e.g., presidents and council members) that must remain visible.
 - **Quality Control**: Inter-annotator agreement checked on sample documents
 
 ### Using the Dataset
@@ -534,33 +534,10 @@ for test_mun in municipalities:
 
 The system is designed around the Hugging Face `transformers` ecosystem, tailored specifically for token classification on long, structured administrative documents. It features a custom data processing pipeline to handle token alignment and a specialized training loop designed to counteract the severe class imbalance inherent in anonymization tasks (e.g., thousands of `NAME` entities vs. very few `DEGREE` entities).
 
-```
-┌─────────────────────────┐
-│  Raw Municipal Minutes  │
-│  (Chunked JSONL files)  │
-└────────────┬────────────┘
-             │
-      ┌──────┴──────┐
-      │             │
-      ▼             ▼
-┌───────────┐ ┌──────────────┐
-│ Tokenizer │ │ LOMO Splitter│
-│ & Aligner │ │ (Data Prep)  │
-└─────┬─────┘ └──────┬───────┘
-      │              │
-      ▼              ▼
-┌────────────────────────────┐
-│  XLM-RoBERTa NER Pipeline  │
-│  (Weighted Loss Trainer)   │
-└────────────┬───────────────┘
-             │
-      ┌──────┴──────┐
-      ▼             ▼
-┌───────────┐ ┌───────────────┐
-│ seqeval   │ │ Anonymized    │
-│ Metrics   │ │ Text Output   │
-└───────────┘ └───────────────┘
-```
+<!-- Include a diagram if available -->
+<div align="center">
+    <img width="1000" alt="Architecture Diagram" src="assets/architecture.png" />
+</div>
 
 ### Component Descriptions
 
