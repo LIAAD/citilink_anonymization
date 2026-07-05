@@ -1,4 +1,4 @@
-# CitiLink: Entity Extraction and Anonymization in Municipal Meeting Minutes
+# CitiLink: Entity Extraction and Pseudonymization in Municipal Meeting Minutes
 
 ---
 
@@ -8,12 +8,12 @@
 
 
 
-This repository presents an anonymization task and a corresponding evaluation framework for de-identification and Information Extraction (IE) algorithms, specifically tailored for Portuguese Municipal Meeting Minutes. It details the anonymization dataset and provides a benchmark of state-of-the-art models used for the protection of Personally Identifiable Information (PII).
-> The demo version is currently available at [Demo](https://huggingface.co/spaces/liaad/Citilink-Text-Anonymization-Demo).
+This repository presents a pseudonymization pipeline and a corresponding evaluation framework for de-identification and Information Extraction (IE) algorithms, specifically tailored for Portuguese Municipal Meeting Minutes. It details the pseudonymization dataset and provides a benchmark of state-of-the-art models used for the protection of Personally Identifiable Information (PII).
+> The demo version is currently available at [Demo](https://huggingface.co/spaces/liaad/CitiLink-Pseudonymization-Demo).
 
 <!-- Include a diagram if available -->
 <div align="center">
-    <img width="1000" alt="Architecture Diagram" src="assets/pipeline.png" />
+    <img width="1000" alt="Architecture Diagram" src="assets/architecture.png" />
 </div>
 
 ---
@@ -26,10 +26,10 @@ This repository presents an anonymization task and a corresponding evaluation fr
 4. [Dependencies](#3-dependencies)
 5. [Installation](#4-installation)
 6. [Usage](#5-usage)
-7. [Dataset](#6-dataset) 
+7. [Dataset](#6-dataset)
 8. [Architecture](#7-architecture)
 9. [Evaluation Metrics](#8-evaluation-metrics)
-10. [Hyperparameter Tuning](#9-hyperparameter-tuning) 
+10. [Experimental Settings & Results](#9-experimental-settings--results)
 11. [Known Issues](#10-known-issues)
 12. [License](#11-license)
 13. [Resources](#12-resources)
@@ -40,37 +40,43 @@ This repository presents an anonymization task and a corresponding evaluation fr
 
 ## Description
 
-This project provides a unified workflow for training, evaluating, and comparing de-identification and Named Entity Recognition (NER) algorithms. This task involves identifying and protecting sensitive personal information (PII) within public documents, which is crucial for:
+This project provides a unified workflow for training, evaluating, and comparing de-identification and Named Entity Recognition (NER) algorithms, extended with a coreference resolution stage that ensures consistent pseudonymization across an entire document. This task involves identifying and protecting sensitive personal information (PII) within public documents, which is crucial for:
 
  - **Privacy & Compliance:** Ensuring adherence to GDPR and local data protection regulations by effectively detecting and masking sensitive identifiers.
 
- - **Data Security:** Automating* the protection of personal information in large volumes of public records.
+ - **Data Security:** Automating the protection of personal information in large volumes of public records.
 
  - **Public Administration:** Facilitating the secure processing and sharing of municipal meeting minutes while preserving citizen privacy.
 
-The framework supports various algorithms and includes our new anonymization dataset, featuring 120 annotated minutes from 6 Portuguese municipalities across 17 categories, namely: **Name**, **Administrative Information**, **Position or Department**, **Address**, **Date**, **Location**, **Other**, **Personal Document**, **Company**, **ArtisticActivity**, **Degree**, **Time**, **License Plate**, **Job**, **Vehicle**, **Faculty**, **Family Relationship**.
+The framework supports two complementary tasks. First, NER identifies and classifies sensitive entities across 17 categories using a range of encoder and generative models. Second, coreference resolution links all mentions of the same entity throughout the document, so that every occurrence receives a consistent pseudonym identifier. Both tasks are evaluated independently and jointly through an end-to-end pseudonymization pipeline.
+
+The dataset comprises 120 annotated minutes from 6 Portuguese municipalities across 17 categories: **Name**, **Administrative Information**, **Position or Department**, **Address**, **Date**, **Location**, **Other**, **Personal Document**, **Company**, **ArtisticActivity**, **Degree**, **Time**, **License Plate**, **Job**, **Vehicle**, **Faculty**, **Family Relationship**.
 
 ### Key Features
-- **Context-Aware NER (XLM-RoBERTa):** Fine-tuned XLM-RoBERTa architecture, providing robust multilingual entity recognition capabilities specifically trained to detect and classify Personally Identifiable Information (PII) in municipal documents.
 
-- **Sliding Window Segmentation:** A preprocessing strategy that handles lengthy and complex meeting minutes by processing text in overlapping windows, ensuring that entities at the boundaries of text chunks are never truncated or missed.
+- **Context-Aware NER (XLM-RoBERTa):** Fine-tuned XLM-RoBERTa architecture providing robust multilingual entity recognition specifically trained to detect and classify PII in municipal documents.
 
-- **Leave-One-Municipality-Out (LOMO) Evaluation:** A rigorous validation methodology that tests the model on entirely unseen municipalities, guaranteeing that the system generalizes well across different administrative writing styles and does not simply memorize local patterns.
+- **Coreference Resolution:** A mention-ranking model (Lee et al., 2017) built on top of SpanBERT-PT, BERTimbau, Longformer and ModernBERT that links all coreferent mentions of the same entity across the document, enabling consistent pseudonym assignment.
 
-- **Granular Entity Classification:** Optimized to detect and categorize a wide range of PII (Names, Addresses, License Plates, Job Titles, Dates, etc.) using a precise BIO tagging scheme for high-fidelity de-identification.
+- **Continued Pre-Training (SpanBERT-PT):** BERTimbau further pre-trained on Portuguese administrative text using Masked Language Modelling, producing a domain-adapted encoder specifically suited to the coreference task.
 
-- **Standardized Metric Tracking:** Integration with seqeval for sequence-level evaluation, providing accurate F1-Score, Precision, and Recall metrics essential for measuring the reliability of the anonymization process.
+- **End-to-End Pseudonymization Pipeline:** NER and coreference are combined in a single pipeline (`pseudonymize.py`) that replaces each entity with a tagged pseudonym including a consistent numerical identifier (e.g., `<NAME-1>`).
 
-- **Generalization vs. Specialization:** Supports both "General Model" (trained on all municipalities) and "Intra-Municipality" (trained on specific data) workflows to balance broad coverage with local accuracy.
+- **Sliding Window Segmentation:** A preprocessing strategy that handles long meeting minutes by processing text in overlapping windows, ensuring that entities at the boundaries of text chunks are never truncated or missed.
 
-- **Reproducible Experiments:** Complete environment configuration and version tracking (transformers, torch, seqeval) to ensure that all model training and evaluation results are fully reproducible.
+- **Leave-One-Municipality-Out (LOMO) Evaluation:** A rigorous validation methodology that tests the model on entirely unseen municipalities, guaranteeing that the system generalises well across different administrative writing styles.
+
+- **Granular Entity Classification:** Optimised to detect and categorise a wide range of PII using a precise BIO tagging scheme for high-fidelity pseudonymization.
+
+- **Standardised Metric Tracking:** Integration with `seqeval` for NER evaluation and CoNLL metrics (MUC, B³, CEAF-e, LEA) for coreference evaluation.
+
+- **Reproducible Experiments:** Complete environment configuration and version tracking to ensure that all model training and evaluation results are fully reproducible.
 
 ### Use Cases
 
-
 This project is particularly useful for:
 
-- **Automated PII Anonymization:** Efficient detection and masking of personal data in administrative documents in European Portuguese (PT-PT)
+- **Automated PII Pseudonymization:** Efficient detection and consistent masking of personal data in administrative documents in European Portuguese (PT-PT).
 
 ---
 
@@ -83,28 +89,28 @@ Core functionalities are stable and tested. The project has been used for academ
 
 ## 2. Technology Stack
 
-**Language**: Python Python 3.10+
+**Language**: Python 3.10+
 
 **Core Frameworks**:
-- **Hugging Face**: Provides the end-to-end pipeline for model architecture, tokenization, training, and evaluation (BERT, XLM-RoBERTa).
+- **Hugging Face**: Provides the end-to-end pipeline for model architecture, tokenization, training, and evaluation (BERT, XLM-RoBERTa, Longformer, ModernBERT).
 - **PyTorch**: The underlying deep learning framework used for training neural networks and tensor computations.
-- **Seqeval**: Framework de avaliação essencial para calcular métricas precisas de NER (Precision, Recall e F1-Score) ao nível da sequência.
+- **Seqeval**: Essential evaluation framework for computing precise NER metrics (Precision, Recall and F1-Score) at sequence level.
 
 **Key Libraries**:
-- `transformers` (5.0.0+): Core library for accessing, training, and deploying state-of-the-art transformer models.
-
-- `datasets` (4.4.1+): Enables efficient loading, pre-processing, and management of the annotated municipal meeting minutes.
-
-- `torch` (2.7.1+cu118+): The foundational deep learning framework for tensor computations and model training.
-
-- `seqeval` (1.2.2+): Specialized framework for calculating precise sequence labeling metrics (Precision, Recall, F1-Score) for NER tasks.
-
-- `scikit-learn` (1.7.2+): Used for calculating statistical classification reports and generating confusion matrices.
-
-- `matplotlib` (3.10.7+): Used for generating performance visualization charts and evaluation plots.
-
-- `seaborn` (0.13.2+): High-level interface for creating detailed statistical visualizations, such as error analysis heatmaps.
-
+- `transformers` (4.40.0+): Core library for accessing, training, and deploying state-of-the-art transformer models.
+- `datasets` (2.18.0+): Enables efficient loading, pre-processing, and management of the annotated municipal meeting minutes.
+- `torch` (2.0.0+): The foundational deep learning framework for tensor computations and model training.
+- `seqeval` (1.2.2+): Specialised framework for calculating precise sequence labelling metrics for NER tasks.
+- `scikit-learn` (1.4.0+): Used for calculating statistical classification reports and generating confusion matrices.
+- `scipy` (1.11.0+): Used for the CEAF-e coreference metric (linear assignment).
+- `fastcoref` (2.1.6+): Provides zero-shot coreference baselines (LingMess and FCoref).
+- `matplotlib` (3.7.0+): Used for generating performance visualisation charts and evaluation plots.
+- `seaborn` (0.12.0+): High-level interface for creating detailed statistical visualisations.
+- `google-generativeai` (0.5.0+): Client library for the Gemini API, used in the generative few-shot NER experiments.
+- `bitsandbytes` (0.43.0+): Enables 4-bit quantisation for running GerVASIO 8B and AMALIA 9B locally.
+- `accelerate` (0.29.0+): Required for `device_map="auto"` when loading large generative models.
+- `huggingface-hub` (0.22.0+): Used for publishing and downloading models from the Hugging Face Hub.
+- `safetensors` (0.4.0+): Safe and efficient format for saving and loading model weights.
 
 **Development Tools**:
 - Git for version control
@@ -129,6 +135,14 @@ numpy>=1.24.0
 matplotlib>=3.7.0
 seaborn>=0.12.0
 regex>=2025.11.3
+fastcoref>=2.1.6
+scipy>=1.11.0
+google-generativeai>=0.5.0
+bitsandbytes>=0.43.0
+accelerate>=0.29.0
+tqdm>=4.66.0
+huggingface-hub>=0.22.0
+safetensors>=0.4.0
 ```
 
 ### Installing Dependencies
@@ -140,13 +154,13 @@ pip install -r requirements.txt
 
 ### Additional Setup
 
-1. **PyTorch with CUDA support (Crucial for WSL/GPU training):** Make sure you install the PyTorch version that matches your NVIDIA CUDA drivers to utilize hardware acceleration.
+1. **PyTorch with CUDA support (Crucial for WSL/GPU training):** Make sure you install the PyTorch version that matches your NVIDIA CUDA drivers to utilise hardware acceleration.
 
 ```bash
 pip install torch --index-url https://download.pytorch.org/whl/cu118
 ```
 
-2. **Baselines (SpaCy & Presidio):** To run the scripts located in the baselines/ directory, you need to install the SpaCy NLP library (along with a Portuguese language model) and Microsoft Presidio for rule-based anonymization.
+2. **Baselines (SpaCy & Presidio):** To run the scripts in `baselines/ner/`, install SpaCy and Microsoft Presidio.
 
 ```bash
 # Install SpaCy and Presidio packages
@@ -155,6 +169,19 @@ pip install spacy presidio-analyzer presidio-anonymizer
 # Download the large Portuguese model for SpaCy
 python -m spacy download pt_core_news_lg
 ```
+
+3. **Coreference Baselines (LingMess & FCoref):** To run the scripts in `baselines/coref/`, install fastcoref.
+
+```bash
+pip install fastcoref
+```
+
+4. **Gemini API Key:** To run the few-shot experiments with Gemini 2.5 Pro, set your API key as an environment variable.
+
+```bash
+export GEMINI_API_KEY="your_api_key_here"
+```
+
 ---
 ## 4. Installation
 
@@ -187,7 +214,7 @@ pip install -r requirements.txt
 pip install torch --index-url https://download.pytorch.org/whl/cu118
 ```
 
-5. **Verify installation** Run a quick check to confirm that PyTorch can access the GPU and Transformers can load the model components.
+5. **Verify installation**
 ```bash
 python -c "import torch; from transformers import AutoTokenizer, AutoModelForTokenClassification; import seqeval, spacy; print(f'CUDA Available: {torch.cuda.is_available()}'); print(f'Torch Version: {torch.__version__}'); print(f'Seqeval Version: {seqeval.__version__}'); tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base'); model = AutoModelForTokenClassification.from_pretrained('xlm-roberta-base', num_labels=35); print('Verification Successful')"
 ```
@@ -195,7 +222,7 @@ python -c "import torch; from transformers import AutoTokenizer, AutoModelForTok
 **Expected output:**
 ```
 CUDA Available: True
-Torch Version: 2.7.1+cu118
+Torch Version: 2.0.0+cu118
 Seqeval Version: 1.2.2
 Verification Successful
 ```
@@ -206,80 +233,147 @@ Verification Successful
 
 ### Quick Start
 
-#### Running a Single Experiment
+#### Task 1 — NER: Training a Supervised Model
 
-Train and evaluate the XLM-RoBERTa or Bert-Base NER model using the predefined training, validation, and test splits across all municipal data.
-
-```bash
-python src/general_model/run_pipeline.py \
-    --config xlm_roberta \  # or bert_base
-    --model_name "xlm-roberta-base" \  # or "neuralmind/bert-base-portuguese-cased"
-    --data_dir "municipal_minutes" \
-    --output_dir "src/results/general_model"
-```
-Expected output:
-```
-Model: xlm-roberta-base # or bert-base-multilingual-cased
-Device: cuda # or cpu
-Success: Loaded 72 training docs and 24 validation docs.
-Starting training
-...
-Results saved in results/xlm_roberta/model_anonymization
-```
-#### Running Leave-One-Municipality-Out Cross-Validation (LOMO)
-
-Evaluate the model's ability to generalize to unseen municipal writing styles by running a full LOMO pipeline.
+Train and evaluate a supervised NER model (XLM-RoBERTa, BERTimbau or Albertina) using the predefined train/val/test splits.
 
 ```bash
-python src/leave_one_municipality_out/run_pipeline.py \
-    --config xlm_roberta \  # or bert_base
-    --model_name "xlm-roberta-base" \ # or "neuralmind/bert-base-portuguese-cased"
-    --data_dir "municipal_minutes" \
-    --output_dir "src/results/leave_one_municipality_out"
-    --target_municipality "M1"  # or M2, M3, etc. (the municipality to leave out for testing)
+python src/ner/supervised/general_model/run_pipeline.py \
+    --config xlmroberta   # or bertimbau, albertina
 ```
 
-Expected output:
+#### Task 1 — NER: Leave-One-Municipality-Out Cross-Validation (LOMO)
 
+Evaluate the model's ability to generalise to unseen municipalities.
+
+```bash
+python src/ner/supervised/leave_one_municipality_out/run_pipeline.py \
+    --config xlmroberta   # or bertimbau, albertina
 ```
-Model: xlm_roberta | Device: cuda
-Starting LOMO for 6 municipalities: ['M1', 'M2', 'M3', 'M4', 'M5', 'M6']
-LOMO ITERATION: Leaving out M1 # or M2, M3, etc.
-Data Split: 
-Train: 62 docs
-Validation: 20 docs
-Starting training for hold-out M1
-...
-Model for M1 saved in models/leave_one_municipality_out/xlm_roberta/M1
+
+#### Task 1 — NER: Few-Shot Evaluation with Generative Models
+
+Run few-shot NER evaluation with Gemini 2.5 Pro, GerVASIO 8B or AMALIA 9B.
+
+```bash
+# Few-shot
+python src/ner/generative/few_shot/evaluate.py \
+    --config gemini_2_5_pro   # or gervasio_8b, amalia_9b
+
+# Few-shot pipeline (generates pseudonymized output)
+python src/ner/generative/few_shot/run_pipeline.py \
+    --config gemini_2_5_pro --split test
 ```
+
+#### Task 1 — NER: Fine-Tuned Generative Model (GerVASIO / AMALIA)
+
+Evaluate the fine-tuned generative model on the test set.
+
+```bash
+python src/ner/generative/fine_tuned/evaluate.py \
+    --model_path models/generative/fine_tuned/gervasio_8b
+
+python src/ner/generative/fine_tuned/run_pipeline.py \
+    --model_path models/generative/fine_tuned/gervasio_8b --split test
+```
+
+#### Task 2 — Coreference: Continued Pre-Training (SpanBERT-PT)
+
+Adapt BERTimbau to the administrative domain via Masked Language Modelling before fine-tuning for coreference.
+
+```bash
+# Estimate training time first
+python src/coref/supervised/continued_pretraining.py \
+    --data_dir data/pretraining --estimate_only
+
+# Run full continued pre-training
+python src/coref/supervised/continued_pretraining.py \
+    --data_dir data/pretraining --epochs 6
+```
+
+#### Task 2 — Coreference: Training a Supervised Model
+
+Fine-tune a coreference model (SpanBERT-PT, BERTimbau, Longformer or ModernBERT) on the CitiLink-Minutes coreference dataset.
+
+```bash
+python src/coref/supervised/general_model/run_pipeline.py \
+    --config spanbert_pt   # or bertimbau_coref, spanbert, longformer, modernbert
+```
+
+#### Task 2 — Coreference: Evaluation
+
+Evaluate a trained coreference model on the test set, including per-class metrics.
+
+```bash
+python src/coref/supervised/general_model/evaluate.py \
+    --config spanbert_pt
+```
+
+#### Full Pipeline — Pseudonymization
+
+Pseudonymize a document using the NER model and the coreference model together. Each detected entity is replaced with a pseudonym tag that includes a consistent numerical identifier across the document.
+
+```bash
+# From a text string
+python src/pseudonymize.py \
+    --ner_model models/general_model/ner/xlmroberta \
+    --coref_model models/general_model/coref/spanbert_pt \
+    --text "O Presidente João Silva apresentou o processo 1/23. O pedido de João Silva foi aprovado."
+
+# From a file
+python src/pseudonymize.py \
+    --ner_model models/general_model/ner/xlmroberta \
+    --coref_model models/general_model/coref/spanbert_pt \
+    --file sample_data/municipal_minutes/minutes_01.txt
+```
+
+**Example output:**
+```
+DETECTED ENTITIES
+  Entity                                   Label                      ID  Confidence
+  ──────────────────────────────────────────────────────────────────────────────────
+  João Silva                               PERSONAL-NAME               1      0.9821
+  João Silva                               PERSONAL-NAME               1      0.9743
+  1/23                                     PERSONAL-ADMIN              1      0.9654
+
+PSEUDONYMIZED TEXT
+O Presidente <PERSONAL-NAME-1> apresentou o processo <PERSONAL-ADMIN-1>.
+O pedido de <PERSONAL-NAME-1> foi aprovado.
+```
+
+#### End-to-End Evaluation
+
+Evaluate the full pseudonymization pipeline (NER + coreference) on the test set, comparing predicted pseudonyms against the gold standard.
+
+```bash
+python src/evaluate_e2e.py \
+    --ner_model   models/general_model/ner/xlmroberta \
+    --coref_model models/general_model/coref/spanbert_pt \
+    --json_dir    data/coreference_dataset \
+    --output      src/results/e2e/metrics.json
+```
+
+#### Running Baselines
+
+```bash
+# NER baselines
+python baselines/ner/baseline_spacy.py
+python baselines/ner/baseline_presidio.py
+
+# Coreference baselines
+python baselines/coref/baseline_lingmess.py
+python baselines/coref/baseline_fcoref.py
+```
+
 ### Common Use Cases
-
-#### Anonymizing Raw Text (Inference)
-
-Run the trained model on a new, raw municipal document to extract and mask PII (Personally Identifiable Information).
-
-```bash
-python anonymize.py \
-    --model_path "src/models/xlm_roberta/model_anonymization" \
-    --input_file "sample_data/municipal_minutes/minutes_01.txt" \
-    --output_file "sample_data/minutes_anonymized/minutes_01_anon.txt"
-```
-
-**Parameters**:
-- `--model_path`: Path to the fine-tuned model checkpoint.
-- `--input_file`: Raw text file to be anonymized.
-- `--output_file`: Path to save the masked text (where entities are replaced by their tags like [PERSONAL-NAME]).
-
-### Advanced Usage
 
 #### Custom Configuration
 
-Create a custom configuration in `src/config/training_configs.json` to fine-tune the pipeline without passing dozens of command-line arguments.
+All model hyperparameters are defined in `src/config/training_configs.json`. To add or modify a configuration, edit the file and pass the config name via `--config`.
 
-```python
-# Example configuration
+```json
 {
-  "xlm_roberta": {
+  "xlmroberta": {
     "model_name": "xlm-roberta-base",
     "max_length": 512,
     "learning_rate": 5e-05,
@@ -293,72 +387,77 @@ Create a custom configuration in `src/config/training_configs.json` to fine-tune
     "logging_steps": 50,
     "report_to": "none"
   },
-  "bert_base": {
-    "model_name": "neuralmind/bert-base-portuguese-cased",
-    "max_length": 512,
-    "learning_rate": 5e-05,
-    "per_device_train_batch_size": 32,
-    "num_train_epochs": 10,
-    "weight_decay": 0.01,
-    "eval_strategy": "yes",
-    "save_strategy": "yes",
-    "load_best_model_at_end": false,
-    "bf16": true,
-    "logging_steps": 50,
-    "report_to": "none"
+  "spanbert_pt": {
+    "model_name": "models/continued_pretraining/spanbert_pt",
+    "max_tokens": 512,
+    "stride": 128,
+    "learning_rate": 2e-05,
+    "encoder_lr_factor": 0.2,
+    "epochs": 30,
+    "grad_acc": 4,
+    "patience": 5,
+    "ffnn_dim": 1024,
+    "dropout": 0.3,
+    "max_span_width": 52,
+    "max_antecedents": 50,
+    "max_cluster_size": 12
   }
 }
 ```
 
 Then run with:
 ```bash
-python src/general_model/run_pipeline.py --config xlm_roberta # or bert_base
+python src/ner/supervised/general_model/run_pipeline.py --config xlmroberta
+python src/coref/supervised/general_model/run_pipeline.py --config spanbert_pt
 ```
 
-#### GPU Selection and Parallelism Constraints
-
-Force the script to use a specific GPU, whilst ensuring tokenizer parallelism is safely disabled.
+#### GPU Selection
 
 ```bash
 export TOKENIZERS_PARALLELISM=false
-CUDA_VISIBLE_DEVICES=1 python src/general_model/run_pipeline.py
+CUDA_VISIBLE_DEVICES=0 python src/ner/supervised/general_model/run_pipeline.py --config xlmroberta
 ```
 
 ### Output Structure
 
-Results are automatically saved in the directories specified in the configuration, maintaining a clear separation between model weights and evaluation metrics.
-
 ```
 src/
-├── models/
-│   ├── general_model/
-│   │   ├── xlm_roberta/                # Model weights, tokenizer, config files
-│   │   └── bert_base/
-│   └── leave_one_municipality_out/
-│       ├── xlm_roberta/
-│       │   ├── M1/                     # Trained model excluding M1
-│       │   ├── M2/                     # Trained model excluding M2
-│       │   └── ...
-│       └── bert_base/
-│
 └── results/
-    ├── general_model/
-    │   ├── xlm_roberta/
-    │   │   ├── metrics.json
-    │   │   └── confusion_matrix.png
-    │   └── bert_base/
-    └── leave_one_municipality_out/
-        ├── xlm_roberta/
-        │   ├── M1/                     # Local metrics (metrics_Alandroal.json)
-        │   ├── M2/                     # Local metrics
-        │   ├── global_metrics.json     # Combined metrics from all municipalities
-        │   └── global_confusion_matrix.png
-        └── bert_base/
+    ├── ner/
+    │   ├── supervised/
+    │   │   ├── general_model/
+    │   │   │   ├── xlmroberta/
+    │   │   │   │   └── metrics.json
+    │   │   │   ├── bertimbau/
+    │   │   │   └── albertina/
+    │   │   └── leave_one_municipality_out/
+    │   │       ├── xlmroberta/
+    │   │       ├── bertimbau/
+    │   │       └── albertina/
+    │   └── generative/
+    │       ├── few_shot/
+    │       │   ├── gemini/
+    │       │   ├── gervasio/
+    │       │   └── amalia/
+    │       └── fine_tuned/
+    │           ├── gervasio/
+    │           └── amalia/
+    ├── coref/
+    │   └── supervised/
+    │       └── general_model/
+    │           ├── spanbert_pt/
+    │           │   └── metrics.json
+    │           ├── bertimbau/
+    │           ├── spanbert/
+    │           ├── longformer/
+    │           └── modernbert/
+    └── e2e/
+        └── metrics.json
 ```
 
 ### Key Hyperparameters
 
-####  Entity Anonymization — General Model
+#### NER — Supervised Models (General Model)
 | Parameter | Value |
 | :--- | :--- |
 | **model_name** | `xlm-roberta-base` |
@@ -374,7 +473,7 @@ src/
 | **logging_steps** | 50 |
 | **report_to** | none |
 
-#### Entity Anonymization — Leave-One-Out / In-Municipality
+#### NER — Supervised Models (LOMO)
 | Parameter | Value              |
 | :--- |:-------------------|
 | **model_name** | `xlm-roberta-base` |
@@ -389,122 +488,122 @@ src/
 | **bf16** | true               |
 | **logging_steps** | 50                 |
 | **report_to** | none               |
+
+#### Coreference — Supervised Models
+| Parameter | Value |
+| :--- | :--- |
+| **max_tokens** | 512 (SpanBERT-PT, BERTimbau) / 4096 (Longformer) / 8192 (ModernBERT) |
+| **stride** | 128 (short-context) / 512 (long-context) |
+| **learning_rate** | 2e-05 |
+| **encoder_lr_factor** | 0.2 |
+| **epochs** | 30 |
+| **grad_acc** | 4 |
+| **patience** | 5 |
+| **ffnn_dim** | 1024 |
+| **dropout** | 0.3 |
+| **max_span_width** | 52 |
+| **max_antecedents** | 50 |
+| **max_cluster_size** | 12 |
+
 ---
 
 ## 6. Dataset
 
 > **⚠️ Important Note for Reviewers**:
 > - **Full Dataset**: The complete dataset statistics are shown below, but the full dataset files are **not yet available** in this repository.
-> - **Sample Data**: This repository only includes a sample of **1 annotated document** for demonstration purposes  The full dataset will be made publicly available upon acceptance of the associated research paper.
-> - **Interactive Testing**: To test the model on this example and explore the full capabilities, please visit our **[Demo](https://huggingface.co/spaces/liaad/Citilink-Text-Anonymization-Demo)**
+> - **Sample Data**: This repository includes a sample of **1 annotated document** for each task for demonstration purposes. The full dataset will be made publicly available upon acceptance of the associated research paper.
+> - **Interactive Testing**: To test the model and explore the full capabilities, please visit our **[Demo](https://huggingface.co/spaces/liaad/CitiLink-Pseudonymization-Demo)**
 
 
 ### Overview
 
-**CitiLink-Minutes** **[Dataset](https://github.com/INESCTEC/citilink-dataset)** is a comprehensive repository of municipal meeting records. This project features a specialized sub-dataset for PII anonymization, consisting of 120 manually annotated minutes from 6 Portuguese municipalities, covering 17 distinct sensitive entity categories.
+**CitiLink-Minutes** **[Dataset](https://github.com/INESCTEC/citilink-dataset)** is a comprehensive repository of municipal meeting records. This project features two specialised sub-datasets: one for NER-based PII detection, and one for coreference resolution, both derived from the same 120 manually annotated minutes from 6 Portuguese municipalities.
 
 ### Dataset Statistics
 
 | Attribute                      | Value                                               |
 |--------------------------------|-----------------------------------------------------|
 | **Total Documents**            | 120                                                 |
-| **Municipalities**             | 6 (M1, M2, M3, M4, M5, M6)                          |
+| **Municipalities**             | 6 (Alandroal, Campo Maior, Covilhã, Fundão, Guimarães, Porto) |
 | **Documents per Municipality** | 20                                                  |
-| **Average Entities per Document**     | 45 entities                                         |
-| **Language**                   | Portuguese (PT)                                     |
-| **Annotation Type**            | Privacy-sensitive entities and personal information |
+| **Total Tokens**               | ~1.3M                                               |
+| **Average Entities per Document** | 45 entities                                      |
+| **Total Coreference Clusters** | 998 (training set)                                  |
+| **Language**                   | Portuguese (PT-PT)                                  |
+| **Annotation Type**            | Privacy-sensitive entities, personal information and coreference links |
 | **Domain**                     | Municipal government meetings                       |
-| **Time Period**                | 2021-2024                                           |
+| **Time Period**                | 2021–2024                                           |
 
 ### Dataset Structure
 
-The dataset is stored in JSON format with the following structure:
+#### NER Dataset (`sample_data/personal_info_dataset/personal_info.json`)
 
 ```json
 {
-  {
-  "Municipality_Name": {
-    "documents": [
-      {
-        "document_id": "Municipality_cm_XXX_YYYY-MM-DD",
-        "full_text": "No dia 09 de Agosto de 2015, às 20:01 m, o Chefe da Divisão de Higiene Urbana, Sr. Ana-Laura Torres, Licenciado em Gestão pela Universidade Aberta, residente na Av Eva Jesus, Alverca do Ribatejo, em Turquemenistão, acompanhado pelo seu esposo, que trabalha como Técnico de controlo de instalações da indústria química, chegou na sua Mercedes-Benz EQC de matrícula 76-41-46. O processo 4800 da empresa Anita Amorim - Serviços, associado ao NIF 3721/217, trata de painel de azulejos e 2.º andar.",
-        "tokens": ["No", "dia", "09", "de", "Agosto", "de", "2015", ",", "às", "20", ":", "01", "m", ",", "o", "Chefe", "da", "Divisão", "de", "Higiene", "Urbana", ",", "Sr", ".", "Ana", "-", "Laura", "Torres", ",", "Licenciado", "em", "Gestão", "pela", "Universidade", "Aberta", ",", "residente", "na", "Av", "Eva", "Jesus", ",", "Alverca", "do", "Ribatejo", ",", "em", "Turquemenistão", ",", "acompanhado", "pelo", "seu", "esposo", ",", "que", "trabalha", "como", "Técnico", "de", "controlo", "de", "instalações", "da", "indústria", "química", ",", "chegou", "na", "sua", "Mercedes", "-", "Benz", "EQC", "de", "matrícula", "76", "-", "41", "-", "46", ".", "O", "processo", "4800", "da", "empresa", "Anita", "Amorim", "-", "Serviços", ",", "associado", "ao", "NIF", "3721", "/", "217", ",", "trata", "de", "painel", "de", "azulejos", "e", "2", ".", "º", "andar", "."],
-        "tags": ["O", "O", "B-PERSONAL-DATE", "I-PERSONAL-DATE", "I-PERSONAL-DATE", "I-PERSONAL-DATE", "I-PERSONAL-DATE", "O", "O", "B-PERSONAL-TIME", "I-PERSONAL-TIME", "I-PERSONAL-TIME", "I-PERSONAL-TIME", "O", "O", "B-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "I-PERSONAL-POSITION", "O", "O", "O", "B-PERSONAL-NAME", "I-PERSONAL-NAME", "I-PERSONAL-NAME", "I-PERSONAL-NAME", "O", "O", "O", "B-PERSONAL-DEGREE", "O", "B-PERSONAL-FACULTY", "I-PERSONAL-FACULTY", "O", "O", "O", "B-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "I-PERSONAL-ADDRESS", "O", "O", "B-PERSONAL-LOCATION", "O", "O", "O", "O", "B-PERSONAL-FAMILY", "O", "O", "O", "O", "B-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "I-PERSONAL-JOB", "O", "O", "O", "O", "B-PERSONAL-VEHICLE", "I-PERSONAL-VEHICLE", "I-PERSONAL-VEHICLE", "I-PERSONAL-VEHICLE", "O", "O", "B-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "I-PERSONAL-LICENSE", "O", "O", "O", "B-PERSONAL-ADMIN", "O", "O", "B-PERSONAL-COMPANY", "I-PERSONAL-COMPANY", "I-PERSONAL-COMPANY", "I-PERSONAL-COMPANY", "O", "O", "O", "O", "B-PERSONAL-INFO", "I-PERSONAL-INFO", "I-PERSONAL-INFO", "O", "O", "O", "B-PERSONAL-ARTISTIC", "I-PERSONAL-ARTISTIC", "I-PERSONAL-ARTISTIC", "O", "B-PERSONAL-OTHER", "I-PERSONAL-OTHER", "I-PERSONAL-OTHER", "I-PERSONAL-OTHER", "O"],
-        "entities": [
-            {
-              "type": "PERSONAL-DATE",
-              "text": "09 de Agosto de 2015",
-              "start": 7,
-              "end": 27
-            },
-            {
-              "type": "PERSONAL-TIME",
-              "text": "20:01 m",
-              "start": 32,
-              "end": 39
-            },
-            {
-              "type": "PERSONAL-POSITION",
-              "text": "Chefe da Divisão de Higiene Urbana",
-              "start": 43,
-              "end": 77
-            },
-            {
-              "type": "PERSONAL-NAME",
-              "text": "Ana-Laura Torres",
-              "start": 83,
-              "end": 99
-            },
-            {
-              "type": "PERSONAL-DEGREE",
-              "text": "Gestão",
-              "start": 115,
-              "end": 121
-            { ... },  
-            { ... }
-        ]
-      }
-    ]
-  }
-}    
+  "minute_id": "EXEMPLO_TAGS_2024_01",
+  "tokens": ["No", "dia", "09", "de", "Agosto", ...],
+  "tags": ["O", "O", "B-PERSONAL-DATE", "I-PERSONAL-DATE", ...],
+  "personal_info": [
+    {
+      "type": "PERSONAL-DATE",
+      "text": "09 de Agosto de 2015",
+      "start": 7,
+      "end": 27
+    }
+  ]
+}
 ```
+
+#### Coreference Dataset (`sample_data/coreference_dataset/coref_info.json`)
+
+```json
+{
+  "doc_key": "Alandroal_cm_001_2024-01-03",
+  "tokens": ["ATA", "N.º", "01", ...],
+  "ner": [[57, 63, "PERSONAL-NAME"], [433, 434, "PERSONAL-ADMIN"], ...],
+  "clusters": [
+    [[57, 63], [80, 80]],
+    [[433, 434], [443, 444]]
+  ]
+}
+```
+
+Each cluster groups all token spans that refer to the same real-world entity. Clusters are restricted to spans of the same NER class (e.g., a `NAME` span can only be linked to another `NAME` span).
 
 ### Data Files
 
-The data files for the CitiLink-Minutes subset are stored in the repository at `sample_data/personal_info/` and can be referenced directly:
-
-- [personal_info.json](sample_data/personal_info_dataset/personal_info.json) — Portuguese version (120 documents)
-- [split_info.json](sample_data/personal_info_dataset/personal_info.json) — Train/val/test split information
+- [personal_info.json](sample_data/personal_info_dataset/personal_info.json) — NER sample document
+- [coref_info.json](sample_data/coreference_dataset/coref_info.json) — Coreference sample document
+- [split_info.json](sample_data/split_info.json) — Train/val/test split information (shared by both tasks)
 
 ### Annotation Process
 
 - **Source**: Official municipal meeting minutes provided by municipalities
 - **Annotation Tool**: INCEpTION (https://inception-project.github.io/)
-- **Annotation Guidelines**: Identifiable personal information is anonymized, except for official roles (e.g., presidents and council members) that must remain visible.
-- **Quality Control**: Inter-annotator agreement checked on sample documents
+- **NER Guidelines**: Identifiable personal information is annotated, except for official roles (e.g., presidents and council members) that must remain visible.
+- **Coreference Guidelines**: All mentions of the same entity are linked within the document, restricted to mentions of the same NER class.
+- **Quality Control**: Annotation based on a detailed annotation manual to ensure consistency.
 
 ### Using the Dataset
 
-#### Load Portuguese Dataset
+#### Load the NER Dataset
 
 ```python
 from dataset_processors import create_dataset_processor
 
 processor = create_dataset_processor(
-    'CitiLink-Minute',
-    dataset_path='../sample_data/subsets/data/personal_info',
-    language='pt'
+    'councilseg',
+    dataset_path='sample_data/personal_info_dataset'
 )
 
 # Get test documents
 test_docs = processor.get_documents(split='test')
 ```
 
-#### LOOCV Municipality-Based Evaluation
+#### LOMO Municipality-Based Evaluation
 
 ```python
-# The dataset processor supports LOMO by municipality
-municipalities = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6']
+municipalities = ['Alandroal', 'CampoMaior', 'Covilha', 'Fundao', 'Guimaraes', 'Porto']
 
 # Train on N-1 municipalities, test on the remaining one
 for test_mun in municipalities:
@@ -517,14 +616,14 @@ for test_mun in municipalities:
 **Challenges**:
 - **Domain Specificity**: Municipal government jargon and formal language
 - **Long Documents**: Average document length exceeds most transformer context windows
-- **Entity Complexity**: Detecting 17 different types of personal data is difficult because they appear in various formats ranging from simple, fixed codes to complex, context-dependent phrases hidden within meeting discussions.
-
-- **Municipality Variation**: Different municipalities have different meeting structures
+- **Entity Complexity**: Detecting 17 different types of personal data is difficult because they appear in various formats ranging from simple, fixed codes to complex, context-dependent phrases.
+- **Coreference Complexity**: Entities are often referred to by abbreviations, partial names or pronouns across long documents.
+- **Municipality Variation**: Different municipalities have different meeting structures.
 
 **Advantages**:
 - **Real-World Data**: Actual municipal meeting minutes, not synthetic
-- **Bilingual**: Enables cross-lingual evaluation
-- **Multiple Municipalities**: Enables generalization testing via Leave-One-Municipality-Out Cross-Validation
+- **Dual Annotation**: Documents are annotated for both NER and coreference, enabling joint evaluation
+- **Multiple Municipalities**: Enables generalisation testing via Leave-One-Municipality-Out Cross-Validation
 
 ---
 
@@ -532,63 +631,77 @@ for test_mun in municipalities:
 
 ### System Architecture
 
-The system is designed around the Hugging Face `transformers` ecosystem, tailored specifically for token classification on long, structured administrative documents. It features a custom data processing pipeline to handle token alignment and a specialized training loop designed to counteract the severe class imbalance inherent in anonymization tasks (e.g., thousands of `NAME` entities vs. very few `DEGREE` entities).
+The system is designed around two complementary tasks. The NER stage identifies and classifies sensitive entities using token classification models. The coreference stage links all mentions of the same entity across the document using a mention-ranking architecture. Both stages are combined in the pseudonymization pipeline, which assigns a consistent pseudonym identifier to each entity cluster.
 
 <!-- Include a diagram if available -->
 <div align="center">
-    <img width="1000" alt="Architecture Diagram" src="assets/architecture.png" />
+    <img width="1000" alt="Pipeline Diagram" src="assets/pipeline.png" />
 </div>
 
 ### Component Descriptions
 
-#### 1. Data Processing Module (`src/general_model/run_pipenline.py`)
-- **JSONL Parser:**: Reads pre-chunked municipal text files recursively, filtering out unknown tags and converting string labels into numeric IDs based on the 35-class BIO schema.
-- **Token Aligner:**: A crucial subcomponent that aligns word-level annotations with the subword tokens generated by the XLM-RoBERTa tokenizer (SentencePiece). It intelligently assigns a `-100` label to special tokens and subword continuations so they are ignored by the loss function.
+#### 1. NER Data Processing (`src/ner/supervised/general_model/run_pipeline.py`)
+- **JSONL Parser:** Reads pre-chunked municipal text files, filtering out unknown tags and converting string labels into numeric IDs based on the 35-class BIO schema.
+- **Token Aligner:** Aligns word-level annotations with the subword tokens generated by the XLM-RoBERTa tokenizer. It assigns a `-100` label to special tokens and subword continuations so they are ignored by the loss function.
 - **Purpose:** Ensures that raw text annotations are perfectly translated into the tensor format required by the Transformer model without losing entity boundary precision.
 
-#### 2. Core NER Model (`src/general_model/run_pipenline.py`)
-- **XLM-RoBERTa Base:**: The foundational multilingual model loaded via `AutoModelForTokenClassification`, equipped with a linear classification head mapped to our 35 PII classes.
-- **WeightedLossTrainer:**: A custom subclass of the Hugging Face `Trainer`. It calculates class frequencies across the training set and overrides the `compute_loss` method to apply inverse frequency weighting to the `CrossEntropyLoss`.
-- **Purpose:** The engine of the system. The custom trainer heavily penalizes the model for missing minority classes (like `PERSONAL-DEGREE` or `PERSONAL-JOB`), preventing the model from just defaulting to the `O` (Outside) class.
+#### 2. NER Model (`src/ner/supervised/general_model/run_pipeline.py`)
+- **XLM-RoBERTa Base:** The foundational multilingual model loaded via `AutoModelForTokenClassification`, equipped with a linear classification head mapped to our 35 PII classes.
+- **WeightedLossTrainer:** A custom subclass of the Hugging Face `Trainer`. It calculates class frequencies across the training set and overrides the `compute_loss` method to apply inverse frequency weighting to the `CrossEntropyLoss`.
+- **Purpose:** The engine of the NER system. The custom trainer heavily penalises the model for missing minority classes (such as `PERSONAL-DEGREE` or `PERSONAL-JOB`), preventing the model from defaulting to the `O` (Outside) class.
 
-#### 3. Evaluation & Reporting Engine (`src/general_model/evaluate.py`)
+#### 3. Continued Pre-Training (`src/coref/supervised/continued_pretraining.py`)
+- **StreamingMLMDataset:** Reads Portuguese administrative text (meeting minutes and news) line by line without loading the full corpus into memory, tokenises in chunks and emits sequences of 512 tokens.
+- **Masked Language Modelling:** Applies standard BERT MLM masking (80% `[MASK]`, 10% random, 10% unchanged) to adapt the BERTimbau encoder to the administrative domain.
+- **Purpose:** Produces the SpanBERT-PT encoder, a domain-adapted version of BERTimbau that serves as the backbone for the coreference model.
 
-- **Seqeval Integration:** Converts token-level predictions back into word-level BIO tags to compute strict, entity-level Precision, Recall, and F1-Scores.
-- **Confusion Matrix Generator:** Uses `seaborn` and `matplotlib` to visually map the model's classification overlaps.
-- **Purpose:** Provides rigorous, human-readable insights into the model's performance, ensuring no PII category is left vulnerable to data leaks.
+#### 4. Coreference Model (`src/coref/supervised/general_model/run_pipeline.py`)
+- **Span Representation:** Each entity span is represented as the concatenation of the start token embedding, the end token embedding, an attention-weighted head token embedding, and a span width embedding.
+- **Mention Scorer:** A feed-forward network (FFNN) that scores each span as a potential mention, incorporating a positional embedding to account for the span's location in the document.
+- **Antecedent Scorer:** A second FFNN that scores each candidate antecedent pair, combining the mention scores of both spans with a distance embedding.
+- **Union-Find Clustering:** Pairs of spans that exceed the linking threshold are merged into clusters using a Union-Find structure, with a constraint that only spans of the same NER class can be linked.
+- **Purpose:** Links all coreferent mentions of the same entity across the document, enabling the assignment of a consistent pseudonym identifier to each entity cluster.
+
+#### 5. Pseudonymization Pipeline (`src/pseudonymize.py`)
+- **NER Stage:** Runs the NER model on the input text and extracts entity spans with their character offsets and class labels.
+- **Coreference Stage:** Converts the character-level spans to token-level spans and runs the coreference model to identify clusters of coreferent mentions.
+- **ID Assignment:** Each cluster receives a sequential identifier per class (e.g., `<NAME-1>`, `<NAME-2>`). Mentions not linked by coreference but sharing the same exact text receive the same ID via exact-match fallback.
+- **Replacement:** The text is rebuilt from right to left, replacing each entity span with its pseudonym tag to avoid index shifting.
+
+#### 6. Evaluation Engine (`src/ner/supervised/general_model/evaluate.py`, `src/coref/supervised/general_model/evaluate.py`, `src/evaluate_e2e.py`)
+- **NER Evaluation:** Uses `seqeval` to compute strict entity-level Precision, Recall and F1-Score, and `seaborn` to generate confusion matrices.
+- **Coreference Evaluation:** Computes MUC, B³, CEAF-e, CoNLL F1 and LEA metrics, both overall and broken down by NER entity class.
+- **End-to-End Evaluation:** Compares the full pipeline output against the gold standard, counting correctly pseudonymized entities, lost entities, incorrect substitutions and false positives.
 
 ### Data Flow Diagram
 
-Data flows from raw document chunks through subword tokenization, into the transformer model for BIO tagging, and finally to the evaluation and de-identification outputs.
-
 ```
 ┌──────────────────────────────────────────┐
-│  Input: Raw Text Chunk + BIO Tags        │
-│  ("No dia 09...", [O, O, B-DATE])        │
+│  Input: Raw Municipal Meeting Minutes    │
 └────────────────────┬─────────────────────┘
                      │
                      ▼
 ┌──────────────────────────────────────────┐
-│  Tokenization & Label Alignment          │
-│  (SentencePiece + -100 masking)          │
+│  Task 1: NER — Entity Detection          │
+│  (XLM-RoBERTa + BIO tagging)            │
 └────────────────────┬─────────────────────┘
                      │
                      ▼
 ┌──────────────────────────────────────────┐
-│  XLM-RoBERTa Forward Pass                │
-│  (Contextual embeddings -> Logits)       │
+│  Task 2: Coreference Resolution          │
+│  (SpanBERT-PT mention-ranking model)     │
 └────────────────────┬─────────────────────┘
                      │
                      ▼
 ┌──────────────────────────────────────────┐
-│  Output: Predicted BIO Tags              │
-│  (Softmax -> Argmax per token)           │
+│  Pseudonymization                        │
+│  (Consistent IDs per entity cluster)    │
+│  e.g. João Silva → <NAME-1>             │
 └────────────────────┬─────────────────────┘
                      │
                      ▼
 ┌──────────────────────────────────────────┐
-│  De-identification & Metrics             │
-│  (Masking PII / seqeval strict report)   │
+│  Output: Pseudonymized Text + Metrics    │
 └──────────────────────────────────────────┘
 ```
 
@@ -596,55 +709,111 @@ Data flows from raw document chunks through subword tokenization, into the trans
 
 ## 8. Evaluation Metrics
 
-The framework evaluates the performance of the de-identification models using standard Named Entity Recognition (NER) metrics at the entity level:
+### NER Metrics
 
-### Precision
+The NER models are evaluated using standard Named Entity Recognition metrics at the entity level (strict matching via `seqeval`).
 
-- **Description:** Measures the accuracy of detections. It indicates how reliable the entities found by the model are.
-- **Range and interpretation:** 0.0 to 1.0. A high score means fewer false positives, preventing the unnecessary redaction of safe text.
+#### Precision
+- **Description:** Measures the accuracy of detections — how reliable the entities found by the model are.
 - **Formula:** `TP / (TP + FP)`
 
-### Recall
-
-- **Description:** Measures the completeness of detections. It indicates how much of the actual sensitive data was successfully found.
-- **Range and interpretation:** 0.0 to 1.0. A high score is critical for anonymization, meaning fewer false negatives and preventing privacy leaks.
+#### Recall
+- **Description:** Measures the completeness of detections — how much of the actual sensitive data was successfully found.
 - **Formula:** `TP / (TP + FN)`
 
-### F1-Score
+#### F1-Score
+- **Description:** The harmonic mean of Precision and Recall.
+- **Formula:** `2 * (Precision * Recall) / (Precision + Recall)`
 
-- **Description:** The harmonic mean of Precision and Recall, providing a single balanced metric.
-- **Range and interpretation:** 0.0 to 1.0. A high score indicates a well-calibrated model that safely masks PII without destroying the document's context.
-- Formula: `2 * (Precision * Recall) / (Precision + Recall)`
+### Coreference Metrics
+
+Coreference resolution is evaluated using the standard CoNLL coreference metrics.
+
+#### MUC
+Measures how many predicted clusters correctly partition the gold mention sets. Focuses on the links between mentions.
+
+#### B³
+Measures the overlap between predicted and gold clusters at the mention level. Sensitive to both precision and recall of cluster membership.
+
+#### CEAF-e
+Aligns predicted and gold clusters optimally and measures entity-level similarity.
+
+#### CoNLL F1
+The average of MUC F1, B³ F1 and CEAF-e F1. The primary coreference metric reported in the literature.
+
+#### LEA
+Link-based Entity Aware metric. Measures the proportion of within-cluster links that are correctly predicted.
+
+### End-to-End Pseudonymization Metrics
+
+The end-to-end pipeline is evaluated by comparing predicted pseudonyms against the gold standard at the span level.
+
+| Category | Description |
+| :--- | :--- |
+| **Correctly pseudonymized** | Span detected, class correct, cluster ID consistent with gold |
+| **Lost** | Gold span not detected by NER |
+| **Incorrect substitutions** | Span detected but class wrong or cluster ID inconsistent |
+| **False positives** | Span predicted with no corresponding gold span |
 
 ---
 
 ## 9. Experimental Settings & Results
 
-The following metrics were calculated at the **strict entity level** (requiring an exact match of both the *token* and tag boundaries) using the `seqeval` library.
+### Task 1 — NER: General Model
 
-| Entity Type          | Precision | Recall | F1-Score | Suporte |
-|:----------------------------|:---------:| :---: | :---: | :---: |
-| **PERSONAL-NAME**           |   0.95    | 0.92 | **0.94** | 822 |
-| **PERSONAL-LOCATION**       |   0.82    | 0.83 | **0.83** | 392 |
-| **PERSONAL-POSITION**       |   0.79    | 0.89 | **0.83** | 331 |
-| **PERSONAL-ADMIN**          |   0.73    | 0.95 | **0.82** | 291 |
-| **PERSONAL-ADDRESS**        |   0.53    | 0.58 | 0.56 | 112 |
-| **PERSONAL-DATE**           |   0.91    | 0.83 | **0.87** | 77 |
-| **PERSONAL-INFO**           |   0.90    | 0.56 | 0.69 | 32 |
-| **PERSONAL-COMPANY**        |   0.76    | 0.46 | 0.58 | 28 |
-| **PERSONAL-OTHER**          |   0.64    | 0.67 | 0.65 | 24 |
-| **PERSONAL-TIME**           |   1.00    | 1.00 | **1.00** | 17 |
-| **PERSONAL-VEHICLE**        |   0.60    | 0.75 | 0.67 | 16 |
-| **PERSONAL-LICENSE**        |   0.38    | 1.00 | 0.55 | 12 |
-| **PERSONAL-FACULTY**        |   1.00    | 0.67 | 0.80 | 3 |
-| **PERSONAL-DEGREE**         |   0.00    | 0.00 | 0.00 | 2 |
-| **PERSONAL-JOB**            |   0.33    | 1.00 | 0.50 | 1 |
-| **PERSONAL-ARTISTIC**       |   0.00    | 0.00 | 0.00 | 0 |
-| **PERSONAL-FAMILY**         |   0.00    | 0.00 | 0.00 | 0 |
-| **---**                     |    ---    | --- | --- | --- |
-| **Micro Avg**               | **0.82**  | **0.87** | **0.84** | **2160** |
-| **Macro Avg**               | **0.61**  | **0.65** | **0.60** | **2160** |
-| **Weighted Avg**            | **0.84**  | **0.87** | **0.85** | **2160** |
+The following results were obtained on the test set using strict entity-level evaluation (`seqeval`).
+
+| Type | Model | F1 macro (%) | F1 micro (%) | P macro (%) | P micro (%) | R macro (%) | R micro (%) |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| Reference Tools | Microsoft Presidio | 30.54 | 36.65 | 32.28 | 34.98 | 31.05 | 38.46 |
+| Reference Tools | SpaCy | 25.87 | 31.21 | 25.16 | 29.32 | 26.92 | 33.33 |
+| Encoder Models | Albertina 1.5B | 64.13 | 84.39 | 65.36 | 82.25 | 64.21 | 86.64 |
+| Encoder Models | BERTimbau | 72.08 | 82.89 | 74.95 | 79.84 | 72.85 | 86.06 |
+| Encoder Models | **XLM-RoBERTa** | **72.67** | **83.51** | **71.21** | **79.77** | **74.87** | **87.85** |
+| Decoder (few-shot) | Gemini 2.5 Pro | 29.95 | 35.13 | 22.36 | 23.91 | 61.04 | 66.13 |
+| Decoder (few-shot) | GerVASIO 8B | 22.24 | 30.23 | 21.07 | 26.27 | 23.60 | 35.75 |
+| Decoder (few-shot) | AMALIA 9B | 16.97 | 25.21 | 16.11 | 23.33 | 17.89 | 27.44 |
+| Decoder (fine-tuned) | GerVASIO 8B (FT) | 50.24 | 57.23 | 48.15 | 54.60 | 52.52 | 60.13 |
+| Decoder (fine-tuned) | AMALIA 9B (FT) | 44.97 | 51.21 | 42.35 | 48.20 | 47.94 | 54.62 |
+
+### Task 1 — NER: Leave-One-Municipality-Out (LOMO)
+
+| Municipality | Model | F1 macro (%) | F1 micro (%) |
+|:---|:---|:---:|:---:|
+| Alandroal | Albertina 1.5B | 58.43 | 74.91 |
+| Alandroal | BERTimbau | 65.51 | 73.04 |
+| Alandroal | XLM-RoBERTa | 66.47 | 74.02 |
+| Campo Maior | Albertina 1.5B | 38.25 | 52.64 |
+| Campo Maior | BERTimbau | 41.08 | 48.53 |
+| Campo Maior | XLM-RoBERTa | 45.52 | 52.09 |
+| **Average** | **Albertina 1.5B** | **49.01** | **62.52** |
+| **Average** | **BERTimbau** | **50.74** | **58.06** |
+| **Average** | **XLM-RoBERTa** | **54.62** | **61.89** |
+
+### Task 2 — Coreference: General Model
+
+| Model | MUC F1 (%) | B³ F1 (%) | CEAF-e F1 (%) | CoNLL F1 (%) | LEA F1 (%) |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| LingMess (zero-shot) | 0.00 | 55.70 | 0.00 | 18.57 | 0.00 |
+| FCoref (zero-shot) | 93.60 | 60.70 | 18.20 | 57.47 | 14.30 |
+| BERTimbau | 88.80 | 87.50 | 77.90 | 84.70 | 71.50 |
+| SpanBERT | 86.50 | 86.30 | 75.90 | 82.90 | 71.00 |
+| Longformer | 88.50 | 86.20 | 75.30 | 83.40 | 67.80 |
+| ModernBERT | 88.90 | 88.00 | 80.50 | 85.80 | 72.90 |
+| **SpanBERT-PT** | **91.50** | **89.50** | **81.20** | **87.40** | **74.80** |
+
+### End-to-End Pseudonymization
+
+| Metric | Value |
+|:---|:---:|
+| Correctly pseudonymized entities | 1050 |
+| Lost entities (not detected) | 310 |
+| Incorrect substitutions | 200 |
+| False positives | 203 |
+| **Precision (%)** | **72.26** |
+| **Recall (%)** | **71.38** |
+| **F1-Score (%)** | **71.81** |
+
 ---
 
 ## 10. Known Issues
@@ -652,7 +821,7 @@ The following metrics were calculated at the **strict entity level** (requiring 
 ### Current Limitations
 
 1. **Class Imbalance**: Low recall on rare entities (e.g., `DEGREE`, `FAMILY`).
-   - **Workaround**: Implemented a `WeightedLossTrainer` to penalize minority class errors.
+   - **Workaround**: Implemented a `WeightedLossTrainer` to penalise minority class errors.
    - **Future Work**: Synthetic data augmentation.
 
 2. **Context Limits**: XLM-RoBERTa's 512-token cap can fragment long documents.
@@ -660,6 +829,7 @@ The following metrics were calculated at the **strict entity level** (requiring 
 
 3. **Entity Ambiguity**: Confusion between person names and locations named after people (e.g., "Rua Almeida Garrett").
 
+4. **Coreference Span Alignment**: The end-to-end pipeline converts character-level NER spans to token-level spans via a whitespace tokenisation heuristic, which may introduce minor misalignments in documents with non-standard spacing.
 
 ### Reporting Issues
 
@@ -697,15 +867,23 @@ The CitiLink-Minutes dataset is derived from public municipal meeting minutes an
 
 The pre-trained models are available for download:
 
-- **liaad/Citilink-XLMR-Anonymization-pt**: [Model](https://huggingface.co/liaad/Citilink-XLMR-Anonymization-pt)
+- **NER (XLM-RoBERTa)**: [liaad/CitiLink-XLMR-Anonymization-pt](https://huggingface.co/liaad/CitiLink-XLMR-Anonymization-pt)
+- **Coreference (SpanBERT-PT)**: [liaad/CitiLink-SpanBERT-Coreference-pt](https://huggingface.co/liaad/CitiLink-SpanBERT-Coreference-pt)
+
+### Demo
+
+An interactive demo of the full pseudonymization pipeline is available on Hugging Face Spaces:
+
+- **CitiLink Pseudonymization Demo**: [liaad/Citilink-Text-Pseudonymization-Demo](https://huggingface.co/spaces/liaad/CitiLink-Pseudonymization-Demo)
 
 ## 13. Acknowledgments
 
 ---
 
-- Municipal governments of M1, M2, M3, M4, M5, and M6 for providing meeting minutes
+- Municipal governments of Alandroal, Campo Maior, Covilhã, Fundão, Guimarães and Porto for providing meeting minutes
 - INCEpTION project for the annotation tool
 - Hugging Face for model hosting and transformers library
+- MACC / Deucalion HPC cluster for computational resources (projects F202500017 and F202600025)
 
 ## 14. Citation
 
@@ -714,6 +892,6 @@ Coming Soon...
 
 ---
 
-**Template Version**: 1.0  
-**Last Updated**: February 28, 2026  
-**Maintained by**: Tiago Marques, Citilink Team, LIAAD/INESC TEC, University of Beira Interior
+**Template Version**: 2.0  
+**Last Updated**: July 3, 2026  
+**Maintained by**: Tiago Marques, CitiLink Team, LIAAD/INESC TEC, University of Beira Interior

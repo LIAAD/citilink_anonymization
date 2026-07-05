@@ -1,0 +1,104 @@
+{
+    "PERSONAL-ADDRESS": {
+        "precision": 0.6515151515151515,
+        "recall": 0.8113207547169812,
+        "f1-score": 0.7226890756302522,
+        "support": 53
+    },
+    "PERSONAL-ADMIN": {
+        "precision": 0.8787878787878788,
+        "recall": 0.8285714285714286,
+        "f1-score": 0.8529411764705883,
+        "support": 140
+    },
+    "PERSONAL-ARTISTIC": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 0
+    },
+    "PERSONAL-COMPANY": {
+        "precision": 0.6666666666666666,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.4444444444444444,
+        "support": 6
+    },
+    "PERSONAL-DATE": {
+        "precision": 0.8936170212765957,
+        "recall": 0.9333333333333333,
+        "f1-score": 0.9130434782608695,
+        "support": 45
+    },
+    "PERSONAL-FAMILY": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 4
+    },
+    "PERSONAL-LOCATION": {
+        "precision": 0.3333333333333333,
+        "recall": 0.23809523809523808,
+        "f1-score": 0.2777777777777778,
+        "support": 21
+    },
+    "PERSONAL-NAME": {
+        "precision": 0.9851851851851852,
+        "recall": 0.9568345323741008,
+        "f1-score": 0.9708029197080292,
+        "support": 139
+    },
+    "PERSONAL-OTHER": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 9
+    },
+    "PERSONAL-POSITION": {
+        "precision": 0.6091954022988506,
+        "recall": 0.726027397260274,
+        "f1-score": 0.6625,
+        "support": 73
+    },
+    "PERSONAL-PUBLIC": {
+        "precision": 0.8258325832583259,
+        "recall": 0.8788314176245211,
+        "f1-score": 0.8515081206496521,
+        "support": 2088
+    },
+    "PERSONAL-TIME": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 6
+    },
+    "micro avg": {
+        "precision": 0.822556943423953,
+        "recall": 0.8664860681114551,
+        "f1-score": 0.8439502450056541,
+        "support": 2584
+    },
+    "macro avg": {
+        "precision": 0.6536777685268323,
+        "recall": 0.6421956196091009,
+        "f1-score": 0.6413089160784677,
+        "support": 2584
+    },
+    "weighted avg": {
+        "precision": 0.8221841373722887,
+        "recall": 0.8664860681114551,
+        "f1-score": 0.8430937708947037,
+        "support": 2584
+    },
+    "best_val": {
+        "precision": 0.7933662667607622,
+        "recall": 0.8729616400062121,
+        "f1-score": 0.831262939958592,
+        "support": 20682
+    },
+    "best_test": {
+        "precision": 0.822556943423953,
+        "recall": 0.8664860681114551,
+        "f1-score": 0.8439502450056541,
+        "support": 2584
+    }
+}

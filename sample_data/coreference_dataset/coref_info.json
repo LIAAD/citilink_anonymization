@@ -1,0 +1,116 @@
+{
+  "doc_key": "EXEMPLO_2024_01",
+  "tokens": [
+    "Presidiu", "o", "Senhor", "João", "Manuel", "Ferreira", "Costa", ",",
+    "Presidente", "da", "Câmara", "Municipal", "de", "Évora", ".",
+    "Vereadores", "Ana", "Sofia", "Martins", "Lopes", "\n",
+    "Rui", "Pedro", "Oliveira", "Santos", "\n",
+    "Secretariou", "a", "Reunião", "Maria", "José", "Gomes", "Pereira", ".",
+    "No", "Edifício", "Sede", "do", "Município", "de", "Évora", ",",
+    "o", "Senhor", "Presidente", "da", "Câmara", "Municipal", ",",
+    "João", "Manuel", "Ferreira", "Costa", ",",
+    "declarou", "aberta", "a", "reunião", ".",
+    "O", "Sr.", "Presidente", "da", "Câmara", "Municipal", "de", "Évora",
+    "informou", "que", "a", "informação", "n.º", "2341", "/", "2023",
+    "do", "Serviço", "de", "Obras", "foi", "aprovada", ".",
+    "Referiu", "o", "Sr.", "Presidente", "que", "a", "informação", "n.º", "2341", "/", "2023",
+    "já", "tinha", "sido", "analisada", "pelos", "serviços", ".",
+    "O", "requerente", "Carlos", "Alberto", "Nunes", "Rodrigues", ",",
+    "residente", "na", "Rua", "das", "Flores", ",", "n.º", "12", ",", "Évora", ",",
+    "solicitou", "autorização", "para", "obras", "no", "imóvel", "sito", "na",
+    "Rua", "das", "Flores", ",", "n.º", "12", ".",
+    "O", "pedido", "de", "Carlos", "Rodrigues", "foi", "analisado",
+    "pelo", "Diretor", "do", "Departamento", "de", "Obras", ",",
+    "Engenheiro", "Paulo", "Miguel", "Sousa", "Tavares", ".",
+    "A", "Vereadora", "Ana", "Sofia", "Martins", "Lopes", "interveio",
+    "para", "esclarecer", "que", "Ana", "Lopes", "tinha",
+    "já", "verificado", "os", "documentos", ".",
+    "O", "Vereador", "Rui", "Oliveira", "confirmou", "o", "exposto", ".",
+    "O", "Eng.", "Paulo", "Tavares", ",", "na", "qualidade", "de",
+    "Diretor", "do", "Departamento", "de", "Obras", ",",
+    "apresentou", "o", "parecer", "técnico", ".",
+    "Pelo", "Senhor", "Presidente", "foi", "presente", "a", "reunião",
+    "a", "informação", "n.º", "5872", "do", "Gabinete", "Jurídico", ".",
+    "Ponderado", "o", "assunto", ",", "o", "Executivo", "Municipal",
+    "deliberou", "por", "unanimidade", "aprovar", "a", "proposta", ".",
+    "E", "eu", ",", "Maria", "José", "Gomes", "Pereira", ",",
+    "lavrei", "e", "vou", "subscrever", "a", "presente", "ata", ".",
+    "O", "PRESIDENTE", "DA", "CÂMARA", "MUNICIPAL", ",",
+    "JOÃO", "MANUEL", "FERREIRA", "COSTA",
+    "A", "SECRETÁRIA", ",",
+    "MARIA", "JOSÉ", "GOMES", "PEREIRA"
+  ],
+  "ner": [
+    [3,   6,   "PERSONAL-NAME"],
+    [8,   13,  "PERSONAL-POSITION"],
+    [16,  19,  "PERSONAL-NAME"],
+    [21,  24,  "PERSONAL-NAME"],
+    [29,  32,  "PERSONAL-NAME"],
+    [44,  49,  "PERSONAL-POSITION"],
+    [50,  53,  "PERSONAL-NAME"],
+    [61,  66,  "PERSONAL-POSITION"],
+    [72,  75,  "PERSONAL-ADMIN"],
+    [85,  88,  "PERSONAL-ADMIN"],
+    [99,  104, "PERSONAL-NAME"],
+    [108, 115, "PERSONAL-ADDRESS"],
+    [122, 129, "PERSONAL-ADDRESS"],
+    [132, 134, "PERSONAL-NAME"],
+    [136, 141, "PERSONAL-POSITION"],
+    [143, 146, "PERSONAL-NAME"],
+    [151, 154, "PERSONAL-NAME"],
+    [157, 159, "PERSONAL-NAME"],
+    [162, 165, "PERSONAL-NAME"],
+    [168, 171, "PERSONAL-POSITION"],
+    [173, 176, "PERSONAL-NAME"],
+    [183, 186, "PERSONAL-NAME"],
+    [190, 195, "PERSONAL-NAME"],
+    [196, 199, "PERSONAL-NAME"]
+  ],
+  "clusters": [
+    [
+      [3,   6],
+      [50,  53],
+      [183, 186],
+      [190, 195]
+    ],
+    [
+      [8,   13],
+      [44,  49],
+      [61,  66]
+    ],
+    [
+      [16,  19],
+      [151, 154],
+      [157, 159]
+    ],
+    [
+      [21,  24],
+      [162, 165]
+    ],
+    [
+      [29,  32],
+      [173, 176],
+      [196, 199]
+    ],
+    [
+      [99,  104],
+      [132, 134]
+    ],
+    [
+      [108, 115],
+      [122, 129]
+    ],
+    [
+      [136, 141],
+      [168, 171]
+    ],
+    [
+      [143, 146],
+      [180, 183]
+    ],
+    [
+      [72,  75],
+      [85,  88]
+    ]
+  ]
+}

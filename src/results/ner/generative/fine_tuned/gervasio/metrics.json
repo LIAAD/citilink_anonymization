@@ -1,0 +1,16 @@
+{
+  "model": "gervasio_8b_fine_tuned",
+  "model_name": "NOVA-vision-language/GerVASIO-8B",
+  "evaluation": "general_model",
+  "type": "fine_tuned",
+  "macro avg": {
+    "precision": 0.4815,
+    "recall": 0.5252,
+    "f1-score": 0.5024
+  },
+  "micro avg": {
+    "precision": 0.5460,
+    "recall": 0.6013,
+    "f1-score": 0.5723
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "model": "longformer",
+  "model_name": "allenai/longformer-base-4096",
+  "evaluation": "general_model",
+  "test": {
+    "MUC": {
+      "precision": 0.8520,
+      "recall": 0.9210,
+      "f1": 0.8850
+    },
+    "B3": {
+      "precision": 0.8110,
+      "recall": 0.9200,
+      "f1": 0.8620
+    },
+    "CEAF_e": {
+      "precision": 0.8580,
+      "recall": 0.6710,
+      "f1": 0.7530
+    },
+    "CoNLL_F1": 0.8340,
+    "LEA": {
+      "precision": 0.5530,
+      "recall": 0.8780,
+      "f1": 0.6780
+    }
+  }
+}

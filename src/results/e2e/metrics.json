@@ -1,0 +1,17 @@
+{
+  "model_ner": "models/general_model/ner/xlm_roberta",
+  "model_coref": "models/general_model/coref/spanbert_pt",
+  "evaluation": "end_to_end_pseudonymization",
+  "n_docs": 24,
+  "totals": {
+    "correctly_pseudonymized": 1050,
+    "lost": 310,
+    "incorrect_substitutions": 200,
+    "false_positives": 203
+  },
+  "metrics": {
+    "precision": 72.26,
+    "recall": 71.38,
+    "f1_score": 71.81
+  }
+}

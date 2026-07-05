@@ -1,0 +1,116 @@
+{
+    "PERSONAL-ADDRESS": {
+        "precision": 0.6164383561643836,
+        "recall": 0.7258064516129032,
+        "f1-score": 0.6666666666666667,
+        "support": 62
+    },
+    "PERSONAL-ADMIN": {
+        "precision": 0.8333333333333334,
+        "recall": 0.7988165680473372,
+        "f1-score": 0.8157099697885196,
+        "support": 169
+    },
+    "PERSONAL-COMPANY": {
+        "precision": 0.6,
+        "recall": 0.375,
+        "f1-score": 0.4615384615384615,
+        "support": 8
+    },
+    "PERSONAL-DATE": {
+        "precision": 0.851063829787234,
+        "recall": 0.8333333333333334,
+        "f1-score": 0.8421052631578947,
+        "support": 48
+    },
+    "PERSONAL-DEGREE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 2
+    },
+    "PERSONAL-FACULTY": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1-score": 0.6666666666666666,
+        "support": 2
+    },
+    "PERSONAL-FAMILY": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1-score": 0.6666666666666666,
+        "support": 4
+    },
+    "PERSONAL-INFO": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1
+    },
+    "PERSONAL-LOCATION": {
+        "precision": 0.7058823529411765,
+        "recall": 0.3870967741935484,
+        "f1-score": 0.5,
+        "support": 31
+    },
+    "PERSONAL-NAME": {
+        "precision": 0.949748743718593,
+        "recall": 0.9086538461538461,
+        "f1-score": 0.9287469287469288,
+        "support": 208
+    },
+    "PERSONAL-OTHER": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 18
+    },
+    "PERSONAL-POSITION": {
+        "precision": 0.6196319018404908,
+        "recall": 0.7769230769230769,
+        "f1-score": 0.689419795221843,
+        "support": 130
+    },
+    "PERSONAL-PUBLIC": {
+        "precision": 0.8034965034965035,
+        "recall": 0.8801225584067407,
+        "f1-score": 0.8400658014988119,
+        "support": 2611
+    },
+    "PERSONAL-TIME": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 6
+    },
+    "micro avg": {
+        "precision": 0.7984801576132845,
+        "recall": 0.8596969696969697,
+        "f1-score": 0.827958558295637,
+        "support": 3300
+    },
+    "macro avg": {
+        "precision": 0.7485425015201226,
+        "recall": 0.727553757762199,
+        "f1-score": 0.7198275871394613,
+        "support": 3300
+    },
+    "weighted avg": {
+        "precision": 0.7986712681056336,
+        "recall": 0.8596969696969697,
+        "f1-score": 0.8266719457039633,
+        "support": 3300
+    },
+    "best_val": {
+        "precision": 0.7637883008356546,
+        "recall": 0.8719155431187993,
+        "f1-score": 0.8142780780424067,
+        "support": 25218
+    },
+    "best_test": {
+        "precision": 0.7984801576132845,
+        "recall": 0.8596969696969697,
+        "f1-score": 0.827958558295637,
+        "support": 3300
+    }
+}

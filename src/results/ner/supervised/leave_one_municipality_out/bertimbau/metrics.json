@@ -1,0 +1,91 @@
+{
+  "model": "bertimbau",
+  "model_name": "neuralmind/bert-base-portuguese-cased",
+  "evaluation": "leave_one_municipality_out",
+  "results_by_municipality": {
+    "Alandroal": {
+      "macro avg": {
+        "precision": 0.6683,
+        "recall": 0.6432,
+        "f1-score": 0.6551
+      },
+      "micro avg": {
+        "precision": 0.7421,
+        "recall": 0.7189,
+        "f1-score": 0.7304
+      }
+    },
+    "Campo Maior": {
+      "macro avg": {
+        "precision": 0.4257,
+        "recall": 0.3964,
+        "f1-score": 0.4108
+      },
+      "micro avg": {
+        "precision": 0.5012,
+        "recall": 0.4706,
+        "f1-score": 0.4853
+      }
+    },
+    "Covilha": {
+      "macro avg": {
+        "precision": 0.5521,
+        "recall": 0.5289,
+        "f1-score": 0.5403
+      },
+      "micro avg": {
+        "precision": 0.6274,
+        "recall": 0.6038,
+        "f1-score": 0.6157
+      }
+    },
+    "Fundao": {
+      "macro avg": {
+        "precision": 0.5339,
+        "recall": 0.5171,
+        "f1-score": 0.5252
+      },
+      "micro avg": {
+        "precision": 0.6041,
+        "recall": 0.5928,
+        "f1-score": 0.5984
+      }
+    },
+    "Guimaraes": {
+      "macro avg": {
+        "precision": 0.5023,
+        "recall": 0.4791,
+        "f1-score": 0.4907
+      },
+      "micro avg": {
+        "precision": 0.5719,
+        "recall": 0.5503,
+        "f1-score": 0.5602
+      }
+    },
+    "Porto": {
+      "macro avg": {
+        "precision": 0.4386,
+        "recall": 0.4078,
+        "f1-score": 0.4224
+      },
+      "micro avg": {
+        "precision": 0.5123,
+        "recall": 0.4852,
+        "f1-score": 0.4981
+      }
+    }
+  },
+  "average": {
+    "macro avg": {
+      "precision": 0.5189,
+      "recall": 0.4961,
+      "f1-score": 0.5074
+    },
+    "micro avg": {
+      "precision": 0.5930,
+      "recall": 0.5703,
+      "f1-score": 0.5806
+    }
+  }
+}

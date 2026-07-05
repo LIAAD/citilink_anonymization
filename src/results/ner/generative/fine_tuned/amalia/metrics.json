@@ -1,0 +1,16 @@
+{
+  "model": "amalia_9b_fine_tuned",
+  "model_name": "NOVA-vision-language/AMALIA-9B-1225-SFT",
+  "evaluation": "general_model",
+  "type": "fine_tuned",
+  "macro avg": {
+    "precision": 0.4235,
+    "recall": 0.4794,
+    "f1-score": 0.4497
+  },
+  "micro avg": {
+    "precision": 0.4820,
+    "recall": 0.5462,
+    "f1-score": 0.5121
+  }
+}

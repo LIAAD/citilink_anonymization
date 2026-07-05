@@ -1,0 +1,16 @@
+{
+  "model": "amalia_9b",
+  "model_name": "NOVA-vision-language/AMALIA-9B-1225-SFT",
+  "evaluation": "general_model",
+  "type": "few_shot",
+  "macro avg": {
+    "precision": 0.1611,
+    "recall": 0.1789,
+    "f1-score": 0.1697
+  },
+  "micro avg": {
+    "precision": 0.2333,
+    "recall": 0.2744,
+    "f1-score": 0.2521
+  }
+}
